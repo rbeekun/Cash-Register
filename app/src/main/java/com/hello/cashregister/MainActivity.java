@@ -53,22 +53,15 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Create 4 Products object
-        Product pants = new Product("pants", 10, 10.50);
-        Product shoes = new Product("shoes", 15, 23.45);
-        Product hats  = new Product("hats", 4, 20.45);
-        Product shirts = new Product("shirts", 23, 30.00);
-
-        //Create dataManager products list and history list
-        DataManager.shared.setProducts(new ArrayList<>());
-        DataManager.shared.setPurchaseHistory(new ArrayList<>());
-
-        // Add each product object to DataManager
-        DataManager.shared.addProduct(pants);
-        DataManager.shared.addProduct(shoes);
-        DataManager.shared.addProduct(hats);
-        DataManager.shared.addProduct(shirts);
-
+        // Verifies if products list is empty in data manager
+        if(DataManager.shared.getProducts().isEmpty())
+        {
+            // Add each product object to DataManager
+            DataManager.shared.addProduct(new Product("Pants", 10, 10.50));
+            DataManager.shared.addProduct(new Product("Shoes", 15, 23.45));
+            DataManager.shared.addProduct(new Product("Hats", 4, 20.45));
+            DataManager.shared.addProduct(new Product("Shirts", 23, 30.00));
+        }
 
         // Create ProductAdapter and connect to listView
         productAdapter = new ProductAdapter(this, DataManager.shared.getProducts());
