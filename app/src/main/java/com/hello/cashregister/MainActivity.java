@@ -2,6 +2,7 @@ package com.hello.cashregister;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -42,6 +44,23 @@ public class MainActivity extends AppCompatActivity {
     private ProductAdapter productAdapter;
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("products", DataManager.shared.getProducts());
+        outState.putSerializable("history", DataManager.shared.getPurchaseHistory());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        DataManager.shared.setProducts((ArrayList<Product>) savedInstanceState.getSerializable("products"));
+        DataManager.shared.setPurchaseHistory((ArrayList<PurchaseHistory>) savedInstanceState.getSerializable("history"));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -54,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Verifies if products list is empty in data manager
-        if(DataManager.shared.getProducts().isEmpty())
+        if(savedInstanceState == null)
         {
             // Add each product object to DataManager
             DataManager.shared.addProduct(new Product("Pants", 10, 10.50));
